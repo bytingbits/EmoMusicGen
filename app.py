@@ -2,7 +2,8 @@ import os
 import random
 import time
 import streamlit as st
-from pretty_midi import PrettyMIDI, TempoChange
+#from pretty_midi import PrettyMIDI, TempoChange
+import pretty_midi
 import io
 
 # Set page configuration
@@ -67,7 +68,7 @@ if st.button("✨ Generate Random MIDI"):
     # Load random MIDI file
     try:
         selected_midi = random.choice(midi_files[selected_class])
-        st.session_state.original_midi = PrettyMIDI(selected_midi)
+        st.session_state.original_midi = pretty_midi.PrettyMIDI(selected_midi)
         st.success("🎉 MIDI generated! Customize it below!")
     except Exception as e:
         st.error(f"Error loading MIDI: {e}")
@@ -96,7 +97,7 @@ if st.session_state.original_midi:
             midi_buffer = io.BytesIO()
             st.session_state.original_midi.write(midi_buffer)
             midi_buffer.seek(0)
-            modified_midi = PrettyMIDI(midi_buffer)
+            modified_midi = pretty_midi.PrettyMIDI(midi_buffer)
             
             # Transpose notes
             for inst in modified_midi.instruments:
@@ -105,7 +106,7 @@ if st.session_state.original_midi:
             
             # Adjust tempo
             tempo_mspq = 60000000 / tempo
-            modified_midi.tempo_changes = [TempoChange(tempo_mspq, 0.0)]
+            modified_midi.tempo_changes = [pretty_midi.TempoChange(tempo_mspq, 0.0)]
             
             # Change instrument
             for inst in modified_midi.instruments:
