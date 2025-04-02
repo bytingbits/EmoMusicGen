@@ -1,2 +1,3 @@
+setuptools
 pretty_midi
 numpy
