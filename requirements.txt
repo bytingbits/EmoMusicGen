@@ -1,2 +1,3 @@
+git+https://github.com/mik3y/pip-pretty-midi.git@main#egg=prettymidi
 prettymidi
 numpy
