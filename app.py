@@ -119,15 +119,16 @@ if st.session_state.original_midi:
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
-
+    midi_data = process_midi()
+    if midi_data:
     # Download button
-    st.download_button(
-        label="⬇️ Download Custom MIDI",
-        data=process_midi,
-        file_name="custom_midi.mid",
-        mime="audio/midi",
-        help="Click to download your customized MIDI file"
-    )
+        st.download_button(
+            label="⬇️ Download Custom MIDI",
+            data=process_midi,
+            file_name="custom_midi.mid",
+            mime="audio/midi",
+            help="Click to download your customized MIDI file"
+        )
 
 # Deployment instructions
 st.markdown("---")
