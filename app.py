@@ -43,7 +43,21 @@ st.markdown("---")
 midi_files = load_midi_files()
 
 # Class selection
-selected_class = st.selectbox("Select Music Class", CLASSES, key='class_select')
+cola, colb = st.columns(2)
+val=""
+arou=""
+with cola:
+	val=st.selectbox("Valence", ["high", "low"])
+with colb:
+	val=st.selectbox("Arousal", ["high", "low"])
+if val=="high" and arou =="high":
+	selected_class="CLASS1"	
+elif val=="low" and arou =="high":
+	selected_class="CLASS2"
+elif val=="low" and arou =="low":
+	selected_class="CLASS3"
+else:
+	selected_class="CLASS4"
 
 # Generate MIDI section
 st.header("Generate MIDI")
