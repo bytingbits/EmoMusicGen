@@ -85,7 +85,8 @@ if st.session_state.original_midi:
         "Original": 0,
         "A": -12, "A#": -11, "B": -10, "B#": -9,
         "C": -8, "C#": -7, "D": -6, "D#": -5, "E": -4, "E#": -3,
-        "F": -2, "F#": -1, "G": 1, "G#": 2
+        "F": -2, "F#": -1, "G": 1, "G#": 2, "A (inc)":3 , "A# (inc)": 4, "B (inc)": 5, "B# (inc)": 6,
+        "C (inc)": 7, "C# (inc)": 8, "D (inc)": 9, "D# (inc)": 10, "E (inc)": 11, "E# (inc)": 12
         }
         
         # Dropdown for selecting transposition
