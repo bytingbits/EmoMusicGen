@@ -6,7 +6,7 @@ import pretty_midi
 import io
 
 # Set page configuration (must be at the top)
-st.set_page_config(page_title="MIDI Maestro", layout="centered")
+st.set_page_config(page_title="Emotional Music Generation", layout="centered")
 
 # Constants
 CLASSES = ["CLASS1", "CLASS2", "CLASS3", "CLASS4"]
