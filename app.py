@@ -74,6 +74,7 @@ if st.button("✨ Generate Random MIDI"):
         st.error(f"Error loading MIDI: {e}")
 
 # Customization controls
+# Customization controls
 if st.session_state.original_midi:
     st.markdown("---")
     st.header("Customization Options")
@@ -84,14 +85,27 @@ if st.session_state.original_midi:
         transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
-        tempo = st.slider("Speed (speed up or down)", 1, 8, 1) #integerizing range
+        tempo = st.slider("Speed (speed up or down)", 1, 8, 1)  # integerizing range
     
     with col3:
-        instrument = st.selectbox("Instrument", options=list(INSTRUMENTS.items()),
-                           format_func=lambda x: x[1])
+        instrument = st.selectbox("Instrument", options=list(INSTRUMENTS.items()), format_func=lambda x: x[1])
+
+    # Process MIDI file with custom settings
+    midi_data = process_midi(tempo, transpose, instrument)
+
+    if midi_data:
+        # Download button
+        st.download_button(
+            label="⬇️ Download Custom MIDI",
+            data=midi_data,
+            file_name="custom_midi.mid",
+            mime="audio/midi",
+            help="Click to download your customized MIDI file"
+        )
+
 
     # MIDI processing function        
-    def process_midi():
+    def process_midi(tempo, transpose, instrument):
         try:
             # Create a copy of the original MIDI
             midi_buffer = io.BytesIO()
@@ -129,6 +143,7 @@ if st.session_state.original_midi:
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
+
 
 
 
