@@ -89,7 +89,8 @@ if st.session_state.original_midi:
         time_signature_numerator = st.slider("Time Signature - Numerator", 2, 8, 4)
         time_signature_denominator = st.selectbox("Time Signature - Denominator", [2, 4, 8], index=1)
 
-    st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)")
+    # Add unique key for Staccato checkbox
+    staccato = st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)", key="staccato_checkbox")
 
     # MIDI processing function        
     def process_midi():
@@ -113,7 +114,7 @@ if st.session_state.original_midi:
             modified_midi.time_signature_changes = [pretty_midi.TimeSignature(time_signature_numerator, time_signature_denominator, 0)]
     
             # Apply Staccato (Reduce all note durations by 0.5 seconds)
-            if st.session_state.get('staccato', False):
+            if staccato:  # Check if the staccato checkbox is selected
                 for instrument in modified_midi.instruments:
                     for note in instrument.notes:
                         note.end = note.start + max(0.1, note.end - note.start - 0.5)  # Reduce duration by 0.5, with a minimum duration of 0.1 seconds
@@ -126,9 +127,6 @@ if st.session_state.original_midi:
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
-
-    # Add to session state for staccato checkbox
-    st.session_state.staccato = st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)")
 
     # Generate processed MIDI data
     midi_data = process_midi()
