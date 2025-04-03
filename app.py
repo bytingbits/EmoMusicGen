@@ -33,6 +33,8 @@ def load_midi_files():
 # Initialize session state
 if 'original_midi' not in st.session_state:
     st.session_state.original_midi = None
+if 'processed_midi' not in st.session_state:
+    st.session_state.processed_midi = None
 
 # App title
 st.title("🎹 MIDI Maestro")
@@ -129,16 +131,24 @@ if st.session_state.original_midi:
             return None
 
     # Process the MIDI file with the customization options
-    midi_data = process_midi(tempo, transpose, instrument)
+    if st.button("Generate Custom MIDI"):
+        midi_data = process_midi(tempo, transpose, instrument)
+        
+        if midi_data:
+            # Store processed MIDI data in session state
+            st.session_state.processed_midi = midi_data
+            st.success("🎉 Custom MIDI generated! You can now download it.")
+        else:
+            st.error("Failed to generate custom MIDI.")
 
-    if midi_data:
-        # Download button
-        st.download_button(
-            label="⬇️ Download Custom MIDI",
-            data=midi_data,
-            file_name="custom_midi.mid",
-            mime="audio/midi",
-            help="Click to download your customized MIDI file"
-        )
-    else:
-        st.warning("No data available for download. Please adjust the options and try again.")
+# Download section
+if st.session_state.processed_midi:
+    st.download_button(
+        label="⬇️ Download Custom MIDI",
+        data=st.session_state.processed_midi,
+        file_name="custom_midi.mid",
+        mime="audio/midi",
+        help="Click to download your customized MIDI file"
+    )
+else:
+    st.warning("Please generate a custom MIDI first.")
