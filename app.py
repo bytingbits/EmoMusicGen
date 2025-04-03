@@ -105,13 +105,18 @@ if st.session_state.original_midi:
                     note.pitch = max(0, min(127, note.pitch + transpose))
     
             # Adjust tempo
-            tempo_factor = tempo
-            for time_signature in modified_midi.time_signature_changes:
-                time_signature.time /= tempo_factor
+            tempo_factor = tempo  # Factor by which to scale the tempo
+            if tempo_factor != 1:
+                # Modify tempo changes
+                for i, tempo_change in enumerate(modified_midi.get_tempo_changes()[0]):
+                    modified_midi.get_tempo_changes()[0][i] *= tempo_factor  # Adjust the times for tempo changes
+                for i, tempo in enumerate(modified_midi.get_tempo_changes()[1]):
+                    modified_midi.get_tempo_changes()[1][i] = tempo / tempo_factor  # Scale the tempo to new value
             
-            for tempo_change in modified_midi.get_tempo_changes()[1]:  # Modify existing tempo changes
-                modified_midi._tick_scales *= tempo_factor  # Scale all tempo changes
-            
+            # Adjust time signatures if needed (based on tempo)
+            for ts in modified_midi.time_signature_changes:
+                ts.time /= tempo_factor
+    
             # Change instrument
             for inst in modified_midi.instruments:
                 inst.program = instrument[0]
@@ -120,10 +125,11 @@ if st.session_state.original_midi:
             output_buffer = io.BytesIO()
             modified_midi.write(output_buffer)
             return output_buffer.getvalue()
-        
+    
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
+
 
 
     midi_data = process_midi()
