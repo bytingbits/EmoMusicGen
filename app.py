@@ -92,7 +92,7 @@ if st.session_state.original_midi:
         transpose = st.selectbox("Transpose", list(semitone_mapping.keys()))
         
         # Get the semitone shift value
-        #transpose_value = semitone_mapping[transpose]
+        transpose = semitone_mapping[transpose]
         #transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
