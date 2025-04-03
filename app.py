@@ -84,7 +84,7 @@ if st.session_state.original_midi:
         transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
-        tempo = st.slider("Tempo (BPM)", 20, 300, 120)
+        tempo = st.slider("Speed (speed up or down)", 0.125, 8, 1)
     
     with col3:
         instrument = st.selectbox("Instrument", options=list(INSTRUMENTS.items()),
@@ -105,8 +105,18 @@ if st.session_state.original_midi:
                     note.pitch = max(0, min(127, note.pitch + transpose))
             
             # Adjust tempo
-            tempo_mspq = 60000000 / tempo
-            modified_midi.tempo_changes = [pretty_midi.TempoChange(tempo_mspq, 0.0)]
+            tempo_factor=tempo
+            # Get original times and adjust based on tempo factor
+            original_times = modified_midi.get_beats()
+            new_times = [t / tempo_factor for t in original_times]  # Speed up or slow down
+            
+            # Apply the new timing
+            modify_midi.adjust_times(original_times, new_times)
+                
+                
+
+# Example usage: Doubling the tempo (speeding up)
+"""change_midi_tempo("input.mid", "output.mid", 2.0)
             
             # Change instrument
             for inst in modified_midi.instruments:
@@ -119,7 +129,7 @@ if st.session_state.original_midi:
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
-    midi_data = process_midi()
+    midi_data = process_midi()"""
     if midi_data:
     # Download button
         st.download_button(
