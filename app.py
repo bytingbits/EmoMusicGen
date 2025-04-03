@@ -91,7 +91,7 @@ if st.session_state.original_midi:
                            format_func=lambda x: x[1])
 
     # MIDI processing function
-  def process_midi():
+   def process_midi():
     try:
         # Create a copy of the original MIDI
         midi_buffer = io.BytesIO()
