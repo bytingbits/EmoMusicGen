@@ -123,7 +123,9 @@ if st.session_state.original_midi:
             for inst in modified_midi.instruments:
                 for note in inst.notes:
                     note.pitch = max(0, min(127, note.pitch + transpose))
-
+            if modified_midi.instruments:
+                modified_midi.instruments[0].program = instrument_code
+            
             # ---- Remap note timings based on new time signature and tempo ----
             # Assuming original MIDI is in 4/4:
             # Original measure length: 4 beats at current tempo (seconds per beat = 60/tempo)
