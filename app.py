@@ -130,9 +130,3 @@ if st.session_state.original_midi:
             help="Click to download your customized MIDI file"
         )
 
-# Deployment instructions
-st.markdown("---")
-st.info("💡 **Deployment Note:** To deploy on Streamlit Cloud, ensure:")
-st.write("1. Folder structure: CLASS1, CLASS2, CLASS3, CLASS4 with MIDI files")
-st.write("2. Include `requirements.txt` with:")
-st.code("streamlit\nprettymidi\nnumpy")
