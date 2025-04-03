@@ -104,15 +104,15 @@ if st.session_state.original_midi:
         }
         
         # Dropdown for selecting transposition
-        transpose = st.selectbox("Transpose", list(semitone_mapping.keys()))
+        transpose = st.selectbox("Scale (Raga)", list(semitone_mapping.keys()))
         
         # Get the semitone shift value
         transpose = semitone_mapping[transpose]
         #transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
-        time_signature_numerator = st.slider("Time Signature - Numerator", 2, 8, 4)
-        time_signature_denominator = st.slider("Time Signature - Denominator", 2, 8, 4)
+        time_signature_numerator = st.slider("Time Signature - Numerator (Tala)", 2, 8, 4)
+        time_signature_denominator = st.slider("Time Signature - Denominator (tala)", 2, 8, 4)
         tempo = 120
     
     with col3:
