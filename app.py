@@ -47,7 +47,7 @@ selected_class = st.selectbox("Select Music Class", CLASSES, key='class_select')
 
 # Generate MIDI section
 st.header("Generate MIDI")
-if st.button("✨ Generate Random MIDI"):
+if st.button("✨ Generate Music ✨"):
     if not midi_files.get(selected_class):
         st.error(f"No MIDI files found in {selected_class}!")
         st.stop()
@@ -98,13 +98,17 @@ if st.session_state.original_midi:
     
     with col2:
         time_signature_numerator = st.slider("Time Signature - Numerator", 2, 8, 4)
+        time_signature_denominator = st.slider("Time Signature - Denominator", 2, 8, 4)
         tempo = 120
     
     with col3:
-        
-        time_signature_denominator = st.selectbox("Time Signature - Denominator", [2, 4, 8], index=1)
+        selected_instrument = st.selectbox("Choose an Instrument", list(INSTRUMENTS.values()))
 
-    staccato = st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)", key="staccato_checkbox")
+        # Get the corresponding instrument code
+        instrument_code = [code for code, name in INSTRUMENTS.items() if name == selected_instrument][0]
+
+        
+    staccato = st.checkbox("Apply Staccato Effect", key="staccato_checkbox")
 
     # MIDI processing function with remapped timing
     def process_midi():
