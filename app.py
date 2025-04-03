@@ -124,10 +124,10 @@ if st.session_state.original_midi:
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
-    midi_data = process_midi()"""
+    midi_data = process_midi()
 
 # Example usage: Doubling the tempo (speeding up)
-"""change_midi_tempo("input.mid", "output.mid", 2.0)
+#change_midi_tempo("input.mid", "output.mid", 2.0)
             
             
     if midi_data:
