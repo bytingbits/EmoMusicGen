@@ -136,7 +136,7 @@ if st.session_state.original_midi:
     # Download button
         st.download_button(
             label="⬇️ Download Custom MIDI",
-            data=process_midi,
+            data=mmidi_data,
             file_name="custom_midi.mid",
             mime="audio/midi",
             help="Click to download your customized MIDI file"
