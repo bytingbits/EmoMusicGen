@@ -84,7 +84,7 @@ if st.session_state.original_midi:
         transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
-        tempo = st.slider("Speed (speed up or down)", 0.125, 8.0, 0.125)
+        tempo = st.slider("Speed (speed up or down)", 1, 8, 1) #integerizing range
     
     with col3:
         instrument = st.selectbox("Instrument", options=list(INSTRUMENTS.items()),
