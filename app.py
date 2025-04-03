@@ -35,7 +35,8 @@ if 'original_midi' not in st.session_state:
     st.session_state.original_midi = None
 
 # App title
-st.title("🎹 MIDI Maestro")
+st.title("🎹 Emotional Music Generation")
+st.text("Shakthi, Sreya, Sharada")
 st.markdown("---")
 
 # Load MIDI files
@@ -70,7 +71,7 @@ if st.button("✨ Generate Random MIDI"):
         st.session_state.original_midi = pretty_midi.PrettyMIDI(selected_midi)
         st.success("🎉 MIDI generated! Customize it below!")
     except Exception as e:
-        st.error(f"Error loading MIDI: {e}")
+        st.error(f"Error loading: {e}")
 
 # Customization controls
 if st.session_state.original_midi:
@@ -80,13 +81,26 @@ if st.session_state.original_midi:
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
+        semitone_mapping = {
+        "Original": 0,
+        "A": -12, "A#": -11, "B": -10, "B#": -9,
+        "C": -8, "C#": -7, "D": -6, "D#": -5, "E": -4, "E#": -3,
+        "F": -2, "F#": -1, "G": 1, "G#": 2
+        }
+        
+        # Dropdown for selecting transposition
+        transpose = st.selectbox("Transpose", list(semitone_mapping.keys()))
+        
+        # Get the semitone shift value
+        #transpose_value = semitone_mapping[transpose]
+        #transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
-        tempo = st.slider("Tempo (BPM)", 40, 200, 120)  # Set tempo range for BPM
+        time_signature_numerator = st.slider("Time Signature - Numerator", 2, 8, 4)
+        tempo = 120
     
     with col3:
-        time_signature_numerator = st.slider("Time Signature - Numerator", 2, 8, 4)
+        
         time_signature_denominator = st.selectbox("Time Signature - Denominator", [2, 4, 8], index=1)
 
     staccato = st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)", key="staccato_checkbox")
