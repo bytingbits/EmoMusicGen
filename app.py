@@ -2,7 +2,6 @@ import os
 import random
 import time
 import streamlit as st
-#from pretty_midi import PrettyMIDI, TempoChange
 import pretty_midi
 import io
 
@@ -74,7 +73,6 @@ if st.button("✨ Generate Random MIDI"):
         st.error(f"Error loading MIDI: {e}")
 
 # Customization controls
-# Customization controls
 if st.session_state.original_midi:
     st.markdown("---")
     st.header("Customization Options")
@@ -90,20 +88,6 @@ if st.session_state.original_midi:
     with col3:
         instrument = st.selectbox("Instrument", options=list(INSTRUMENTS.items()), format_func=lambda x: x[1])
 
-    # Process MIDI file with custom settings
-    midi_data = process_midi(tempo, transpose, instrument)
-
-    if midi_data:
-        # Download button
-        st.download_button(
-            label="⬇️ Download Custom MIDI",
-            data=midi_data,
-            file_name="custom_midi.mid",
-            mime="audio/midi",
-            help="Click to download your customized MIDI file"
-        )
-
-
     # MIDI processing function        
     def process_midi(tempo, transpose, instrument):
         try:
@@ -112,12 +96,12 @@ if st.session_state.original_midi:
             st.session_state.original_midi.write(midi_buffer)
             midi_buffer.seek(0)
             modified_midi = pretty_midi.PrettyMIDI(midi_buffer)
-    
+
             # Transpose notes
             for inst in modified_midi.instruments:
                 for note in inst.notes:
                     note.pitch = max(0, min(127, note.pitch + transpose))
-    
+
             # Adjust tempo
             tempo_factor = tempo  # Factor by which to scale the tempo
             if tempo_factor != 1:
@@ -130,31 +114,25 @@ if st.session_state.original_midi:
             # Adjust time signatures if needed (based on tempo)
             for ts in modified_midi.time_signature_changes:
                 ts.time /= tempo_factor
-    
+
             # Change instrument
             for inst in modified_midi.instruments:
                 inst.program = instrument[0]
-    
+
             # Save to buffer
             output_buffer = io.BytesIO()
             modified_midi.write(output_buffer)
             return output_buffer.getvalue()
-    
+
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
 
+    # Process the MIDI file with the customization options
+    midi_data = process_midi(tempo, transpose, instrument)
 
-
-
-    midi_data = process_midi()
-
-# Example usage: Doubling the tempo (speeding up)
-#change_midi_tempo("input.mid", "output.mid", 2.0)
-            
-            
     if midi_data:
-    # Download button
+        # Download button
         st.download_button(
             label="⬇️ Download Custom MIDI",
             data=midi_data,
@@ -162,4 +140,3 @@ if st.session_state.original_midi:
             mime="audio/midi",
             help="Click to download your customized MIDI file"
         )
-
