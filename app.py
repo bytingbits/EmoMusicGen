@@ -140,3 +140,5 @@ if st.session_state.original_midi:
             mime="audio/midi",
             help="Click to download your customized MIDI file"
         )
+    else:
+        st.warning("No data available for download. Please adjust the options and try again.")
