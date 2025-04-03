@@ -33,8 +33,6 @@ def load_midi_files():
 # Initialize session state
 if 'original_midi' not in st.session_state:
     st.session_state.original_midi = None
-if 'processed_midi' not in st.session_state:
-    st.session_state.processed_midi = None
 
 # App title
 st.title("🎹 MIDI Maestro")
@@ -85,70 +83,62 @@ if st.session_state.original_midi:
         transpose = st.slider("Transpose (Semitones)", -12, 12, 0)
     
     with col2:
-        tempo = st.slider("Speed (speed up or down)", 1, 8, 1)  # integerizing range
+        tempo = st.slider("Tempo (BPM)", 40, 200, 120) # Set tempo range for BPM
     
     with col3:
-        instrument = st.selectbox("Instrument", options=list(INSTRUMENTS.items()), format_func=lambda x: x[1])
+        time_signature_numerator = st.slider("Time Signature - Numerator", 2, 8, 4)
+        time_signature_denominator = st.selectbox("Time Signature - Denominator", [2, 4, 8], index=1)
+
+    st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)")
 
     # MIDI processing function        
-    def process_midi(tempo, transpose, instrument):
+    def process_midi():
         try:
             # Create a copy of the original MIDI
             midi_buffer = io.BytesIO()
             st.session_state.original_midi.write(midi_buffer)
             midi_buffer.seek(0)
             modified_midi = pretty_midi.PrettyMIDI(midi_buffer)
-
+    
             # Transpose notes
             for inst in modified_midi.instruments:
                 for note in inst.notes:
                     note.pitch = max(0, min(127, note.pitch + transpose))
-
-            # Adjust tempo
-            tempo_factor = tempo  # Factor by which to scale the tempo
-            if tempo_factor != 1:
-                # Modify tempo changes
-                for i, tempo_change in enumerate(modified_midi.get_tempo_changes()[0]):
-                    modified_midi.get_tempo_changes()[0][i] *= tempo_factor  # Adjust the times for tempo changes
-                for i, tempo in enumerate(modified_midi.get_tempo_changes()[1]):
-                    modified_midi.get_tempo_changes()[1][i] = tempo / tempo_factor  # Scale the tempo to new value
+    
+            # Adjust tempo (set new tempo)
+            new_tempo = tempo  # Set tempo to the value chosen by the user
+            modified_midi.tempo_changes = [(0, new_tempo)]  # Change tempo at time 0
             
-            # Adjust time signatures if needed (based on tempo)
-            for ts in modified_midi.time_signature_changes:
-                ts.time /= tempo_factor
-
-            # Change instrument
-            for inst in modified_midi.instruments:
-                inst.program = instrument[0]
-
+            # Change Time Signature
+            modified_midi.time_signature_changes = [pretty_midi.TimeSignature(time_signature_numerator, time_signature_denominator, 0)]
+    
+            # Apply Staccato (Reduce all note durations by 0.5 seconds)
+            if st.session_state.get('staccato', False):
+                for instrument in modified_midi.instruments:
+                    for note in instrument.notes:
+                        note.end = note.start + max(0.1, note.end - note.start - 0.5)  # Reduce duration by 0.5, with a minimum duration of 0.1 seconds
+    
             # Save to buffer
             output_buffer = io.BytesIO()
             modified_midi.write(output_buffer)
             return output_buffer.getvalue()
-
+        
         except Exception as e:
             st.error(f"Error processing MIDI: {e}")
             return None
 
-    # Process the MIDI file with the customization options
-    if st.button("Generate Custom MIDI"):
-        midi_data = process_midi(tempo, transpose, instrument)
-        
-        if midi_data:
-            # Store processed MIDI data in session state
-            st.session_state.processed_midi = midi_data
-            st.success("🎉 Custom MIDI generated! You can now download it.")
-        else:
-            st.error("Failed to generate custom MIDI.")
+    # Add to session state for staccato checkbox
+    st.session_state.staccato = st.checkbox("Apply Staccato (Reduce note durations by 0.5 sec)")
 
-# Download section
-if st.session_state.processed_midi:
-    st.download_button(
-        label="⬇️ Download Custom MIDI",
-        data=st.session_state.processed_midi,
-        file_name="custom_midi.mid",
-        mime="audio/midi",
-        help="Click to download your customized MIDI file"
-    )
-else:
-    st.warning("Please generate a custom MIDI first.")
+    # Generate processed MIDI data
+    midi_data = process_midi()
+
+    if midi_data:
+        # Download button
+        st.download_button(
+            label="⬇️ Download Custom MIDI",
+            data=midi_data,
+            file_name="custom_midi.mid",
+            mime="audio/midi",
+            help="Click to download your customized MIDI file"
+        )
