@@ -113,11 +113,6 @@ if st.session_state.original_midi:
             # Apply the new timing
             modify_midi.adjust_times(original_times, new_times)
                 
-                
-
-# Example usage: Doubling the tempo (speeding up)
-"""change_midi_tempo("input.mid", "output.mid", 2.0)
-            
             # Change instrument
             for inst in modified_midi.instruments:
                 inst.program = instrument[0]
@@ -130,6 +125,11 @@ if st.session_state.original_midi:
             st.error(f"Error processing MIDI: {e}")
             return None
     midi_data = process_midi()"""
+
+# Example usage: Doubling the tempo (speeding up)
+"""change_midi_tempo("input.mid", "output.mid", 2.0)
+            
+            
     if midi_data:
     # Download button
         st.download_button(
