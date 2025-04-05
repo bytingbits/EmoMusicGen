@@ -7,7 +7,7 @@ import io
 
 # Set page configuration (must be at the top)
 st.set_page_config(page_title="Emotional Music Generation", layout="centered")
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 
 video_html = """
 		<style>
