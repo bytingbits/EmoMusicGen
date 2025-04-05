@@ -31,7 +31,7 @@ video_html = """
 
 		</style>	
 		<video autoplay muted loop id="myVideo">
-		  <source src="https://static.streamlit.io/examples/star.mp4")>
+		  <source src="https://mega.nz/file/hWcU3SrR#R-qzlhkmsjwBrjFyJutSJFkwcBaWMyKLjsORf2E-NIA")>
 		  Your browser does not support HTML5 video.
 		</video>
         """
